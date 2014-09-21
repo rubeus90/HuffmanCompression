@@ -57,7 +57,7 @@ namespace CompressionPlugin
                     frequenceTable[data[i]]++;
                 }
             }
-            return frequenceTable.OrderBy(x => x.Value).ToList();
+            return frequenceTable.ToList();
         }
 
         /*

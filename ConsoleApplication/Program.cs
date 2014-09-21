@@ -48,11 +48,17 @@ namespace ConsoleApplication {
             byte[] data = classe.GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data); // Counts and sorts data
 
-            Debug.Assert(frequencyTable[0].Value == 1 && frequencyTable[1].Value == 2 && frequencyTable[2].Value == 3 && frequencyTable[3].Value == 4, "Echec de la méthode frequency");
-        }
+            KeyValuePair<byte, int> pair = frequencyTable.Find(x => x.Key == 97); //Check a frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency");
 
-        static private void checkDictionnary() {
-            // TO DO ...
+            pair = frequencyTable.Find(x => x.Key == 98); //Check b frequency
+            Debug.Assert(pair.Value == 2, "Echec de la méthode frequency");
+
+            pair = frequencyTable.Find(x => x.Key == 99); //Check c frequency
+            Debug.Assert(pair.Value == 3, "Echec de la méthode frequency");
+
+            pair = frequencyTable.Find(x => x.Key == 100); //Check d frequency
+            Debug.Assert(pair.Value == 4, "Echec de la méthode frequency");
         }
 
         static private void checkTree() {
@@ -77,6 +83,10 @@ namespace ConsoleApplication {
             Console.WriteLine("Calculer : "+ valueTotal);
             Console.WriteLine("Retour de l'arbre :" + treeTop.Value);
             Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree");
+        }
+
+        static private void checkDictionnary() {
+            // TO DO ...
         }
     }
 }
