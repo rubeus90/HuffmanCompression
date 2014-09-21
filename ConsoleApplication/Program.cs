@@ -14,6 +14,7 @@ namespace ConsoleApplication {
             
             // Test
             checkMinimum();
+            checkFrequency();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -24,7 +25,7 @@ namespace ConsoleApplication {
 
         static private void checkMinimum(){
 
-            // Create and intiate a List<Node>
+            // Create and intiate an awesome List<Node>
             List<Node> listNode = new List<Node>();
             listNode.Add(new Node { Key = 0, Value = 5 });
             listNode.Add(new Node { Key = 1, Value = 8 });         
@@ -38,7 +39,23 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             new MainClass().findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 2 && right.Value == 3, "Echec de la méthode findMinimum");
+            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec de la méthode findMinimum");
+        }
+
+        static private void checkFrequency() {
+            MainClass classe = new MainClass();
+            byte[] data = classe.GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
+            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data); // Counts and sorts data
+
+            Debug.Assert(frequencyTable[0].Value == 1 && frequencyTable[1].Value == 2 && frequencyTable[2].Value == 3 && frequencyTable[3].Value == 4, "Echec de la méthode frequency");
+        }
+
+        static private void checkDictionnary() {
+            // TO DO ...
+        }
+
+        static private void checkTree() {
+            // TO DO ...
         }
     }
 }
