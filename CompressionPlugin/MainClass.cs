@@ -84,11 +84,11 @@ namespace CompressionPlugin
         public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
             //Etape 0
             List<Node> listNode = new List<Node>();
+
+            // Maybe do something about this foreach because foreach sucks
             foreach (KeyValuePair<byte, int> pair in data) {
                 listNode.Add(new Node { Key = pair.Key, Value = pair.Value });
             }
-
-            // Initiate Node Left and Right ... Just because Visual wants to
 
             while(listNode.Count > 1) {
                 Node left = listNode[0];

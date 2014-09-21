@@ -15,6 +15,7 @@ namespace ConsoleApplication {
             // Test
             checkMinimum();
             checkFrequency();
+            checkTree();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -39,7 +40,7 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             new MainClass().findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec de la méthode findMinimum");
+            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum");
         }
 
         static private void checkFrequency() {
@@ -55,7 +56,27 @@ namespace ConsoleApplication {
         }
 
         static private void checkTree() {
-            // TO DO ...
+
+            // Create and intiate an awesome List<KeyValuePair>
+            List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(1, 9));
+            listPair.Add(new KeyValuePair<byte, int>(2, 5));
+            listPair.Add(new KeyValuePair<byte, int>(3, 15));
+            listPair.Add(new KeyValuePair<byte, int>(4, 3));
+            listPair.Add(new KeyValuePair<byte, int>(5, 5));
+            listPair.Add(new KeyValuePair<byte, int>(6, 4));
+            listPair.Add(new KeyValuePair<byte, int>(7, 13));
+            listPair.Add(new KeyValuePair<byte, int>(8, 11));
+            listPair.Add(new KeyValuePair<byte, int>(9, 1));
+
+            Node treeTop = new MainClass().createBinaryTree(listPair);
+            int valueTotal = 0;
+            for (int i = 0; i < listPair.Count; i++) {
+                valueTotal += listPair[i].Value;
+            }
+            Console.WriteLine("Calculer : "+ valueTotal);
+            Console.WriteLine("Retour de l'arbre :" + treeTop.Value);
+            Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree");
         }
     }
 }
