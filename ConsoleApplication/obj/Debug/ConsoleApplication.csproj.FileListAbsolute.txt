@@ -10,3 +10,8 @@ C:\Users\HongNgoc\Documents\ESIEE\E5\DotNet\ESIEE Loader\Plugins\CompressionPlug
 C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\bin\Debug\ConsoleApplication.exe.config
 C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\obj\Debug\ConsoleApplication.exe
 C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\obj\Debug\ConsoleApplication.pdb
+C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\bin\Debug\ConsoleApplication.exe
+C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\bin\Debug\ConsoleApplication.pdb
+C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\bin\Debug\CompressionPlugin.dll
+C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\bin\Debug\CompressionPlugin.pdb
+C:\Users\Martin\Documents\GitHub\HuffmanCompression\ConsoleApplication\obj\Debug\ConsoleApplication.csprojResolveAssemblyReference.cache

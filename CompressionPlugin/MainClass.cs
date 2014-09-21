@@ -62,25 +62,20 @@ namespace CompressionPlugin
 
         /*
          * Find the 2 nodes which have the 2 minimum values
+         * Left is the minimum
+         * Right is the second minimum
          */
-        public List<Node> findMinimum(List<Node> list) {
-            List<Node> result = new List<Node>();
-            Node min1 = list[1];
-            Node min2 = list[0];
-            foreach(Node pair in list){
-                if (pair.Value <= min2.Value) {
-                    if (pair.Value <= min1.Value) {
-                        min2 = min1;
-                        min1 = pair;
+        public void findMinimum(List<Node> list, ref Node left,ref Node right) {
+            for (int i = 0; i < list.Count; i++){
+                if (list[i].Value <= right.Value){
+                    if (list[i].Value <= left.Value){
+                        right = left;
+                        left = list[i];
+                    }else{
+                        right = list[i];
                     }
-                    else {
-                        min2 = pair;
-                    }
-                }
+                }     
             }
-            result.Add(min1);
-            result.Add(min2);
-            return result;
         }
 
         /*
@@ -93,10 +88,13 @@ namespace CompressionPlugin
                 listNode.Add(new Node { Key = pair.Key, Value = pair.Value });
             }
 
+            // Initiate Node Left and Right ... Just because Visual wants to
+
             while(listNode.Count > 1) {
-                List<Node> listMins = findMinimum(listNode);
-                Node left = listMins[0];
-                Node right = listMins[1];
+                Node left = listNode[0];
+                Node right = listNode[1];            
+                findMinimum(listNode,ref left, ref right);  
+    
                 Node parent = new Node { Value = left.Value + right.Value, Left = left, Right = right };
 
                 listNode.Add(parent);
