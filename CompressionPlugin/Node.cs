@@ -11,5 +11,9 @@ namespace CompressionPlugin {
         public Node Left{ get; set;}
         public byte Key { get; set; }
         public int Value { get; set; }
+
+        public bool isLeaf() {
+            return (Right == null && Left == null);
+        }
     }
 }

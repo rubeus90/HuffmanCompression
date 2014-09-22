@@ -10,12 +10,15 @@ using System.Diagnostics;
 namespace ConsoleApplication {
     class Program {
         static void Main(string[] args) {
-            MainClass classe = new MainClass();
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             
             // Test
             checkMinimum();
             checkFrequency();
             checkTree();
+            checkDictionnary();
+            checkDecompress();
+            checkFunction();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -38,13 +41,13 @@ namespace ConsoleApplication {
 
             Node left = listNode[0];
             Node right = listNode[1];
-            new MainClass().findMinimum(listNode, ref left, ref right);
+            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
 
             Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum");
         }
 
         static private void checkFrequency() {
-            MainClass classe = new MainClass();
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             byte[] data = classe.GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data); // Counts and sorts data
 
@@ -75,7 +78,7 @@ namespace ConsoleApplication {
             listPair.Add(new KeyValuePair<byte, int>(8, 11));
             listPair.Add(new KeyValuePair<byte, int>(9, 1));
 
-            Node treeTop = new MainClass().createBinaryTree(listPair);
+            Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
             int valueTotal = 0;
             for (int i = 0; i < listPair.Count; i++) {
                 valueTotal += listPair[i].Value;
@@ -86,7 +89,47 @@ namespace ConsoleApplication {
         }
 
         static private void checkDictionnary() {
-            // TO DO ...
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            // Create and intiate an awesome List<KeyValuePair>
+            List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(102, 6));
+            listPair.Add(new KeyValuePair<byte, int>(97, 10));
+            listPair.Add(new KeyValuePair<byte, int>(98, 10));
+            listPair.Add(new KeyValuePair<byte, int>(100, 16));
+            listPair.Add(new KeyValuePair<byte, int>(99, 25));
+            listPair.Add(new KeyValuePair<byte, int>(101, 36));
+
+            Node treeTop = classe.createBinaryTree(listPair);
+
+            classe.createDictionary(treeTop, new List<bool>());
+            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
+        }
+
+        static private void checkDecompress() {
+            bool[] bools = new bool[10];
+            bools[3] = true;
+            bools[5] = true;
+            bools[6] = true;
+            bools[7] = true;
+            bools[8] = true;
+            bools[9] = true;
+            BitArray bits = new BitArray(bools);
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] data = classe.GetBytes("abbcccc");
+            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
+            Node treeTop = classe.createBinaryTree(frequencyTable);
+            classe.createDictionary(treeTop, new List<bool>());
+            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
+            byte[] result = classe.decodeBitArray(bits, treeTop);
+        }
+
+        static private void checkFunction() {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] bytes = classe.GetBytes("abcdefghijklmnopq");
+            Huffman.HuffmanData data = new Huffman.HuffmanData();
+            data.uncompressedData = bytes;
+            classe.Compress(ref data);
+            classe.Decompress(ref data);
         }
     }
 }
