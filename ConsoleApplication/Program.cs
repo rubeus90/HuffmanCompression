@@ -12,13 +12,25 @@ namespace ConsoleApplication {
         static void Main(string[] args) {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             
-            // Test
-            checkMinimum();
-            checkFrequency();
-            checkTree();
-            checkDictionnary();
-            checkDecompress();
-            checkFunction();
+            // Test Frequency
+            checkFrequency1();
+            checkFrequency2();
+            checkFrequency3();
+
+            // Test Minimum
+            checkMinimum1();
+            checkMinimum2();
+            checkMinimum3();
+            checkMinimum4();
+
+            // test Tree
+            checkTree1();
+            checkTree2();
+
+            //checkTree();
+            //checkDictionnary();
+            //checkDecompress();
+            //checkFunction();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -27,26 +39,9 @@ namespace ConsoleApplication {
             BitArray compressedData = classe.storeContentToBitArray(dictionary, data);*/
         }
 
-        static private void checkMinimum(){
+        /***************************************************************************************************************/
 
-            // Create and intiate an awesome List<Node>
-            List<Node> listNode = new List<Node>();
-            listNode.Add(new Node { Key = 0, Value = 5 });
-            listNode.Add(new Node { Key = 1, Value = 8 });         
-            listNode.Add(new Node { Key = 2, Value = 15 });
-            listNode.Add(new Node { Key = 3, Value = 2 });
-            listNode.Add(new Node { Key = 4, Value = 7 });
-            listNode.Add(new Node { Key = 5, Value = 2 });
-            listNode.Add(new Node { Key = 6, Value = 3 });
-
-            Node left = listNode[0];
-            Node right = listNode[1];
-            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
-
-            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum");
-        }
-
-        static private void checkFrequency() {
+        static private void checkFrequency1() {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             byte[] data = classe.GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data); // Counts and sorts data
@@ -64,7 +59,134 @@ namespace ConsoleApplication {
             Debug.Assert(pair.Value == 4, "Echec de la méthode frequency");
         }
 
-        static private void checkTree() {
+        static private void checkFrequency2() {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] data = classe.GetBytes("hey thibault!");
+            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
+
+            KeyValuePair<byte, int> pair = frequencyTable.Find(x => x.Key == 104); //Check h frequency
+            Debug.Assert(pair.Value == 2, "Echec de la méthode frequency : h");
+
+            pair = frequencyTable.Find(x => x.Key == 101); //Check e frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency : e");
+
+            pair = frequencyTable.Find(x => x.Key == 121); //Check y frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency : y");
+
+            pair = frequencyTable.Find(x => x.Key == 32); //Check space frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency : space");
+
+            pair = frequencyTable.Find(x => x.Key == 116); //Check t frequency
+            Debug.Assert(pair.Value == 2, "Echec de la méthode frequency :t");
+
+            pair = frequencyTable.Find(x => x.Key == 105); //Check i frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :i");
+
+            pair = frequencyTable.Find(x => x.Key == 98); //Check b frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :b");
+
+            pair = frequencyTable.Find(x => x.Key == 97); //Check a frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :a");
+
+            pair = frequencyTable.Find(x => x.Key == 117); //Check u frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :u");
+
+            pair = frequencyTable.Find(x => x.Key == 108); //Check l frequency
+            Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :l");
+        }
+
+        static private void checkFrequency3() {
+            String yourString = "Ecrit ce que tu veux, c'est la fête !";
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] data = classe.GetBytes(yourString);
+            int lengh = yourString.Count();
+            int totalFrequency = 0;
+            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
+            foreach (KeyValuePair<byte, int> pair in frequencyTable) {
+                totalFrequency += pair.Value;
+            }
+
+            Debug.Assert(lengh == totalFrequency, "Echec de la methode frequency");
+        }
+
+        /***************************************************************************************************************/
+
+        static private void checkMinimum1() {
+
+            // Create and intiate an awesome List<Node>
+            List<Node> listNode = new List<Node>();
+            listNode.Add(new Node { Key = 0, Value = 5 });
+            listNode.Add(new Node { Key = 1, Value = 8 });
+            listNode.Add(new Node { Key = 2, Value = 15 });
+            listNode.Add(new Node { Key = 3, Value = 2 });
+            listNode.Add(new Node { Key = 4, Value = 7 });
+            listNode.Add(new Node { Key = 5, Value = 2 });
+            listNode.Add(new Node { Key = 6, Value = 3 });
+
+            Node left = listNode[0];
+            Node right = listNode[1];
+            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
+
+            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum");
+        }
+
+        static private void checkMinimum2() {
+            // Create and intiate an awesome List<Node>
+            List<Node> listNode = new List<Node>();
+            listNode.Add(new Node { Key = 0, Value = 1 });
+            listNode.Add(new Node { Key = 1, Value = 2 });
+            listNode.Add(new Node { Key = 2, Value = 4 });
+            listNode.Add(new Node { Key = 3, Value = 3 });
+            listNode.Add(new Node { Key = 4, Value = 4 });
+            listNode.Add(new Node { Key = 5, Value = 6 });
+            listNode.Add(new Node { Key = 6, Value = 8 });
+
+            Node left = listNode[0];
+            Node right = listNode[1];
+            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
+
+            Debug.Assert(left.Value == 1 && right.Value == 2, "Echec méthode findMinimum");
+        }
+
+        static private void checkMinimum3() {
+            // Create and intiate an awesome List<Node>
+            List<Node> listNode = new List<Node>();
+            listNode.Add(new Node { Key = 0, Value = 2 });
+            listNode.Add(new Node { Key = 1, Value = 1 });
+            listNode.Add(new Node { Key = 2, Value = 1 });
+            listNode.Add(new Node { Key = 3, Value = 4 });
+            listNode.Add(new Node { Key = 4, Value = 4 });
+            listNode.Add(new Node { Key = 5, Value = 6 });
+            listNode.Add(new Node { Key = 6, Value = 8 });
+
+            Node left = listNode[0];
+            Node right = listNode[1];
+            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
+
+            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum");
+        }
+
+        static private void checkMinimum4() {
+            // Create and intiate an awesome List<Node>
+            List<Node> listNode = new List<Node>();
+            listNode.Add(new Node { Key = 0, Value = 5 });
+            listNode.Add(new Node { Key = 1, Value = 5 });
+            listNode.Add(new Node { Key = 2, Value = 5 });
+            listNode.Add(new Node { Key = 3, Value = 5 });
+            listNode.Add(new Node { Key = 4, Value = 5 });
+            listNode.Add(new Node { Key = 5, Value = 1 });
+            listNode.Add(new Node { Key = 6, Value = 1 });
+
+            Node left = listNode[0];
+            Node right = listNode[1];
+            new CompressionPlugin.CompressionPlugin().findMinimum(listNode, ref left, ref right);
+
+            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum");
+        }
+
+        /***************************************************************************************************************/
+
+        static private void checkTree1() {
 
             // Create and intiate an awesome List<KeyValuePair>
             List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
@@ -87,6 +209,22 @@ namespace ConsoleApplication {
             Console.WriteLine("Retour de l'arbre :" + treeTop.Value);
             Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree");
         }
+
+        static private void checkTree2() {
+
+            // Create and intiate an awesome List<KeyValuePair>
+            List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(1, 5));
+            listPair.Add(new KeyValuePair<byte, int>(2, 5));
+            listPair.Add(new KeyValuePair<byte, int>(3, 5));
+            listPair.Add(new KeyValuePair<byte, int>(4, 5));
+
+            Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
+            Debug.Assert(treeTop.Right.Right.Right.Key == 3, "Erreur dans la méthode createBinaryTree");
+        }
+
+
+        /***************************************************************************************************************/
 
         static private void checkDictionnary() {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
