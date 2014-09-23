@@ -55,19 +55,21 @@ namespace CompressionPlugin
          * Calculate to frequency of each character
          */
         public List<KeyValuePair<byte,int>> frequency(byte[] data) {
-            Dictionary<byte,int> frequenceTable = new Dictionary<byte,int>();
+            int[] frequenceTable = new int[256];
+            //Dictionary<byte,int> frequenceTable = new Dictionary<byte,int>();
 
             for (int i = 0; i < data.Length; i++) {
-                if (!frequenceTable.ContainsKey(data[i])) {
-                    if (data[i] != 0) {
-                        frequenceTable.Add(data[i], 1);
-                    }                    
-                }
-                else {
-                    frequenceTable[data[i]]++;
+                frequenceTable[data[i]]++; 
+            }
+
+            List<KeyValuePair<byte, int>> list = new List<KeyValuePair<byte, int>>();
+            for (int i = 1; i < 256; i++) {
+                if (frequenceTable[i] != 0) {
+                    list.Add(new KeyValuePair<byte, int>((byte)i, frequenceTable[i]));
                 }
             }
-            return frequenceTable.ToList();
+
+            return list;
         }
 
         /*

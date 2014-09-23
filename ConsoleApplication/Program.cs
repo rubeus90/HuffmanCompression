@@ -91,16 +91,18 @@ namespace ConsoleApplication {
         }
 
         static private void checkFrequency3() {
-            String yourString = "Ecrit ce que tu veux, c'est la fête !";
+            String yourString = "Si toi aussi tu t'amuse à faire du C# le mardi après-midi, tape dans tes mains !";
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             byte[] data = classe.GetBytes(yourString);
             int lengh = yourString.Count();
             int totalFrequency = 0;
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
             foreach (KeyValuePair<byte, int> pair in frequencyTable) {
+                // Console.WriteLine("Key :"+pair.Key + "Pair :" + pair.Value);
                 totalFrequency += pair.Value;
             }
-
+            // Console.WriteLine(totalFrequency);
+            // Console.WriteLine(lengh);
             Debug.Assert(lengh == totalFrequency, "Echec de la methode frequency");
         }
 
