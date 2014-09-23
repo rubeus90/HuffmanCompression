@@ -30,11 +30,8 @@ namespace ConsoleApplication {
             // test Dictionnary
             checkDictionnary();
 
-            // Test truc
-            //checktruc();
-
-            //checkDecompress();
-            //checkFunction();
+            // test compress
+            checkCompress("So let me feel, let me feel, Let me breathe you without a sound It's the only thing I'm waking up for, up for now"); // <-- C'est ici qu'on s'amuse !
         }
 
         /***************************************************************************************************************/
@@ -250,17 +247,30 @@ namespace ConsoleApplication {
         }
 
 
-        static private void checktruc() {
-            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-            byte[] res = classe.GetBytes("110");
-            for(int i= 0;i < res.Count(); i++){
-                Console.WriteLine(res[i]);
-            }
-            
-        }
-
-
         /***************************************************************************************************************/
+
+        static private void checkCompress(String pString) {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+
+            byte[] data = classe.GetBytes(pString);
+            List<KeyValuePair<byte, int>> frequency = classe.frequency(data);
+            Node treeTop = classe.createBinaryTree(frequency);
+            classe.createDictionary(treeTop, new List<bool>());
+            BitArray bits = classe.storeContentToBitArray(data);
+            byte[] compressedData = classe.BitArrayToByteArray(bits);
+            int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
+            
+            /***/
+            classe.dictionary.Clear();
+
+            Node treeTop2 = classe.createBinaryTree(frequency);
+            classe.createDictionary(treeTop2, new List<bool>());
+            byte[] dataDecompressed = classe.decodeBitArray(new BitArray(compressedData), treeTop);
+
+            for (int i = 0, j=0; i < data.Count(); i+=2, j++) {
+                Debug.Assert(data[i] == dataDecompressed[j], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
+            }
+        }
 
         /*static private void checkDecompress() {
             bool[] bools = new bool[10];
@@ -281,13 +291,5 @@ namespace ConsoleApplication {
         }*/
 
         /***************************************************************************************************************/
-        static private void checkFunction() {
-            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-            byte[] bytes = classe.GetBytes("abbcccc");
-            Huffman.HuffmanData data = new Huffman.HuffmanData();
-            data.uncompressedData = bytes;
-            classe.Compress(ref data);
-            classe.Decompress(ref data);
-        }
     }
 }

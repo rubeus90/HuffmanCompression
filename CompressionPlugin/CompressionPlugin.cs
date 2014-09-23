@@ -17,12 +17,12 @@ namespace CompressionPlugin
         }
 
         public bool Compress(ref Huffman.HuffmanData data) {
-            /*byte[] inValue = data.uncompressedData;
+            byte[] inValue = data.uncompressedData;
             data.frequency = frequency(inValue);
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
             BitArray bits = storeContentToBitArray(inValue);
-            data.compressedData = BitArrayToByteArray(bits); */
+            data.compressedData = BitArrayToByteArray(bits);
             return true;
         }
 
@@ -109,7 +109,6 @@ namespace CompressionPlugin
          * Get through the Huffman tree to establish the binary code for each letter
          */
         public void createDictionary(Node node, List<bool> bools) {
-            //Console.WriteLine(boolean);
             if (node.isLeaf()) {
                 //Console.WriteLine("Clé du noeud :" + node.Key);
                 dictionary.Add(node.Key, bools);
@@ -129,13 +128,13 @@ namespace CompressionPlugin
         /*
          * Store the original content into a BitArray 
          */
-        /*public BitArray storeContentToBitArray(byte[] data) {
+        public BitArray storeContentToBitArray(byte[] data) {
             List<bool> encoded = new List<bool>();
             for (int i = 0; i < data.Length; i=i+2) {
                 encoded.AddRange(dictionary[data[i]]);
             }
             return new BitArray(encoded.ToArray());
-        }*/
+        }
 
         public byte[] BitArrayToByteArray(BitArray bits) {
             byte[] ret;
