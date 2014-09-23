@@ -9,7 +9,7 @@ using System.Collections;
 namespace CompressionPlugin
 {
     public class CompressionPlugin : MarshalByRefObject, IPlugin{
-        public Dictionary<byte, List<bool>> dictionary = new Dictionary<byte, List<bool>>();
+        public Dictionary<byte,String> dictionary = new Dictionary<byte, String>();
 
         private String namePlugin = "CompressionPlugin";
         public String PluginName {
@@ -17,19 +17,19 @@ namespace CompressionPlugin
         }
 
         public bool Compress(ref Huffman.HuffmanData data) {
-            byte[] inValue = data.uncompressedData;
+            /*byte[] inValue = data.uncompressedData;
             data.frequency = frequency(inValue);
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
             BitArray bits = storeContentToBitArray(inValue);
-            data.compressedData = BitArrayToByteArray(bits);
+            data.compressedData = BitArrayToByteArray(bits); */
             return true;
         }
 
         public bool Decompress(ref Huffman.HuffmanData data) {
-            Node treeTop = createBinaryTree(data.frequency);
+            /*Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
-            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop);
+            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop);*/
             return true;
         }
 
@@ -92,7 +92,6 @@ namespace CompressionPlugin
          * Create the Huffman tree from the frequency table
          */
         public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
-            //Etape 0
             List<Node> listNode = new List<Node>();
 
             foreach (KeyValuePair<byte, int> pair in data) {
@@ -104,12 +103,11 @@ namespace CompressionPlugin
                 Node right = listNode[1];            
                 findMinimum(listNode,ref left, ref right);  
     
-                Node parent = new Node { Value = left.Value + right.Value, Left = left, Right = right };
+                Node parent = new Node {Value = left.Value + right.Value, Left = left, Right = right };
 
                 listNode.Add(parent);
-
-                listNode.Remove(listNode.Find(x => x.Key==left.Key));
-                listNode.Remove(listNode.Find(x => x.Key==right.Key));
+                listNode.Remove(left);
+                listNode.Remove(right);
             } 
             return listNode[0];
         }
@@ -117,42 +115,33 @@ namespace CompressionPlugin
         /*
          * Get through the Huffman tree to establish the binary code for each letter
          */
-        public bool createDictionary(Node node, List<bool> list) {
-            List<bool> listLeft, listRight;
+        public void createDictionary(Node node, String list) {
+            //Console.WriteLine("noed actuel : " + node.Key + " " + node.Value);
+
             if (node.isLeaf()) {
-                if (list.Count != 0) {
-                    dictionary.Add(node.Key, list);
-                    return true;
-                }
-                else {
-                    list.Add(false);
-                    dictionary.Add(node.Key, list);
-                    return true;
-                }
+                //Console.WriteLine("Clé du noeud :" + node.Key);
+                dictionary.Add(node.Key, list);
             }
+
             else {
-                listLeft = new List<bool>(list);
-                listLeft.Add(false);
-                listRight = new List<bool>(list);
-                listRight.Add(true);
+               // Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
+                //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
 
-                createDictionary(node.Left, listLeft);
-                createDictionary(node.Right, listRight);
-
-                return true;
+                createDictionary(node.Right, list + 1);
+                createDictionary(node.Left, list + 0);
             }
         }
 
         /*
          * Store the original content into a BitArray 
          */
-        public BitArray storeContentToBitArray(byte[] data) {
+        /*public BitArray storeContentToBitArray(byte[] data) {
             List<bool> encoded = new List<bool>();
             for (int i = 0; i < data.Length; i=i+2) {
                 encoded.AddRange(dictionary[data[i]]);
             }
             return new BitArray(encoded.ToArray());
-        }
+        }*/
 
         /*
          * Decode the encoded BitArray to byte[]

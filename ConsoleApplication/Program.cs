@@ -27,16 +27,11 @@ namespace ConsoleApplication {
             checkTree1();
             checkTree2();
 
-            //checkTree();
-            //checkDictionnary();
+            // test Dictionnary
+            checkDictionnary();
+
             //checkDecompress();
             //checkFunction();
-
-            /*byte[] data = classe.GetBytes("abbccddd");
-            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
-            Node treeTop = classe.createBinaryTree(frequencyTable);
-            Dictionary<byte, List<bool>> dictionary = classe.createDictionary(frequencyTable, treeTop);
-            BitArray compressedData = classe.storeContentToBitArray(dictionary, data);*/
         }
 
         /***************************************************************************************************************/
@@ -205,8 +200,7 @@ namespace ConsoleApplication {
             for (int i = 0; i < listPair.Count; i++) {
                 valueTotal += listPair[i].Value;
             }
-            Console.WriteLine("Calculer : "+ valueTotal);
-            Console.WriteLine("Retour de l'arbre :" + treeTop.Value);
+
             Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree");
         }
 
@@ -221,30 +215,35 @@ namespace ConsoleApplication {
             listPair.Add(new KeyValuePair<byte, int>(4, 5));
 
             Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
-            Debug.Assert(treeTop.Right.Right.Right.Key == 1 && treeTop.Right.Right.Left.Key == 2, "Erreur dans la méthode createBinaryTree");
+            Debug.Assert(treeTop.Left.Left.Key == 4 && treeTop.Left.Right.Key == 3 && treeTop.Right.Right.Left.Key == 2 && treeTop.Right.Right.Right.Key == 1 && treeTop.Right.Left.Key == 0, "Erreur dans la méthode createBinaryTree");
         }
 
 
         /***************************************************************************************************************/
 
         static private void checkDictionnary() {
-            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+
             // Create and intiate an awesome List<KeyValuePair>
             List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
-            listPair.Add(new KeyValuePair<byte, int>(102, 6));
-            listPair.Add(new KeyValuePair<byte, int>(97, 10));
-            listPair.Add(new KeyValuePair<byte, int>(98, 10));
-            listPair.Add(new KeyValuePair<byte, int>(100, 16));
-            listPair.Add(new KeyValuePair<byte, int>(99, 25));
-            listPair.Add(new KeyValuePair<byte, int>(101, 36));
+            listPair.Add(new KeyValuePair<byte, int>(0, 5));
+            listPair.Add(new KeyValuePair<byte, int>(1, 5));
+            listPair.Add(new KeyValuePair<byte, int>(2, 5));
+            listPair.Add(new KeyValuePair<byte, int>(3, 5));
+            listPair.Add(new KeyValuePair<byte, int>(4, 5));
 
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             Node treeTop = classe.createBinaryTree(listPair);
 
-            classe.createDictionary(treeTop, new List<bool>());
-            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
+           classe.createDictionary(treeTop,""); // Something wrong with this
+
+            Dictionary<byte, String> dictionary = classe.dictionary;
+            Debug.Assert(dictionary[1] == "111" && dictionary[0] == "10" && dictionary[2] == "110" && dictionary[4] == "00" && dictionary[3] == "01", "Erreur dans la création du dico");
         }
 
-        static private void checkDecompress() {
+
+        /***************************************************************************************************************/
+
+        /*static private void checkDecompress() {
             bool[] bools = new bool[10];
             bools[3] = true;
             bools[5] = true;
@@ -260,8 +259,9 @@ namespace ConsoleApplication {
             classe.createDictionary(treeTop, new List<bool>());
             Dictionary<byte, List<bool>> dictionary = classe.dictionary;
             byte[] result = classe.decodeBitArray(bits, treeTop);
-        }
+        }*/
 
+        /***************************************************************************************************************/
         static private void checkFunction() {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             byte[] bytes = classe.GetBytes("abbcccc");
