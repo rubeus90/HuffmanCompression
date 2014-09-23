@@ -30,6 +30,9 @@ namespace ConsoleApplication {
             // test Dictionnary
             checkDictionnary();
 
+            // Test truc
+            //checktruc();
+
             //checkDecompress();
             //checkFunction();
         }
@@ -236,10 +239,24 @@ namespace ConsoleApplication {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             Node treeTop = classe.createBinaryTree(listPair);
 
-           classe.createDictionary(treeTop,""); // Something wrong with this
+            classe.createDictionary(treeTop, new List<bool>()); // Something wrong with this
 
-            Dictionary<byte, String> dictionary = classe.dictionary;
-            Debug.Assert(dictionary[1] == "111" && dictionary[0] == "10" && dictionary[2] == "110" && dictionary[4] == "00" && dictionary[3] == "01", "Erreur dans la création du dico");
+            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
+            Debug.Assert(dictionary[1][0] && dictionary[1][1] && dictionary[1][2] , "Erreur dans la création du dico"); // Check for 0
+            Debug.Assert(dictionary[0][0] && !dictionary[0][1], "Erreur dans la création du dico");
+            Debug.Assert(dictionary[2][0] && dictionary[2][1] && !dictionary[2][2], "Erreur dans la création du dico");
+            Debug.Assert(!dictionary[4][0] && !dictionary[4][1], "Erreur dans la création du dico");
+            Debug.Assert(!dictionary[3][0] && dictionary[3][1], "Erreur dans la création du dico");
+        }
+
+
+        static private void checktruc() {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] res = classe.GetBytes("110");
+            for(int i= 0;i < res.Count(); i++){
+                Console.WriteLine(res[i]);
+            }
+            
         }
 
 

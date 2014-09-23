@@ -9,7 +9,7 @@ using System.Collections;
 namespace CompressionPlugin
 {
     public class CompressionPlugin : MarshalByRefObject, IPlugin{
-        public Dictionary<byte,String> dictionary = new Dictionary<byte, String>();
+        public Dictionary<byte, List<bool>> dictionary = new Dictionary<byte, List<bool>>();
 
         private String namePlugin = "CompressionPlugin";
         public String PluginName {
@@ -40,15 +40,6 @@ namespace CompressionPlugin
             byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
-        }
-
-        /*
-         * Convert byte[] to String
-         */
-        public string GetString(byte[] bytes) {
-            char[] chars = new char[bytes.Length / sizeof(char)];
-            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-            return new string(chars);
         }
 
         /*
@@ -117,20 +108,21 @@ namespace CompressionPlugin
         /*
          * Get through the Huffman tree to establish the binary code for each letter
          */
-        public void createDictionary(Node node, String list) {
-            //Console.WriteLine("noed actuel : " + node.Key + " " + node.Value);
-
+        public void createDictionary(Node node, List<bool> bools) {
+            //Console.WriteLine(boolean);
             if (node.isLeaf()) {
                 //Console.WriteLine("Clé du noeud :" + node.Key);
-                dictionary.Add(node.Key, list);
-            }
-
-            else {
-               // Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
+                dictionary.Add(node.Key, bools);
+            } else {
+                //Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
                 //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
 
-                createDictionary(node.Right, list + 1);
-                createDictionary(node.Left, list + 0);
+                List<bool> bools_copy = new List<bool>(bools); // J'aimerais bien faire ça pour mon futur, on sait jamais, un accident c'est vite venu
+                bools_copy.Add(true);
+                bools.Add(false);
+
+                createDictionary(node.Right, bools_copy);
+                createDictionary(node.Left, bools);
             }
         }
 
@@ -144,6 +136,18 @@ namespace CompressionPlugin
             }
             return new BitArray(encoded.ToArray());
         }*/
+
+        public byte[] BitArrayToByteArray(BitArray bits) {
+            byte[] ret;
+            if (bits.Length % 8 == 0) {
+                ret = new byte[bits.Length / 8];
+            } else {
+                ret = new byte[bits.Length / 8 + 1];
+            }
+
+            bits.CopyTo(ret, 0);
+            return ret;
+        }
 
         /*
          * Decode the encoded BitArray to byte[]
@@ -169,19 +173,6 @@ namespace CompressionPlugin
                 }
             }
             return list.ToArray();
-        }
-
-        public byte[] BitArrayToByteArray(BitArray bits){
-            byte[] ret;
-            if (bits.Length % 8 == 0) {
-                ret = new byte[bits.Length / 8];
-            }
-            else {
-                ret = new byte[bits.Length / 8 + 1];
-            }
-            
-            bits.CopyTo(ret, 0);
-            return ret;
         }
     }
 }
