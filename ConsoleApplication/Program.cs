@@ -30,7 +30,7 @@ namespace ConsoleApplication {
             //checkTree();
             //checkDictionnary();
             //checkDecompress();
-            //checkFunction();
+            checkFunction();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -221,7 +221,7 @@ namespace ConsoleApplication {
 
             Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
             
-            Debug.Assert(treeTop.Right.Right.Right.Key == 3, "Erreur dans la méthode createBinaryTree");
+            //Debug.Assert(treeTop.Right.Right.Right.Key == 3, "Erreur dans la méthode createBinaryTree");
         }
 
 
@@ -264,7 +264,7 @@ namespace ConsoleApplication {
 
         static private void checkFunction() {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-            byte[] bytes = classe.GetBytes("abcdefghijklmnopq");
+            byte[] bytes = classe.GetBytes("abbcccc");
             Huffman.HuffmanData data = new Huffman.HuffmanData();
             data.uncompressedData = bytes;
             classe.Compress(ref data);

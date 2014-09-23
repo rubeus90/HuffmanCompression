@@ -30,7 +30,6 @@ namespace CompressionPlugin
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
             data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop);
-            data.sizeOfUncompressedData = data.uncompressedData.Count();
             return true;
         }
 
@@ -119,14 +118,10 @@ namespace CompressionPlugin
          * Get through the Huffman tree to establish the binary code for each letter
          */
         public bool createDictionary(Node node, List<bool> list) {
+            List<bool> listLeft, listRight;
             if (node.isLeaf()) {
                 if (list.Count != 0) {
-                    try {
-                        dictionary.Add(node.Key, list);
-                    }
-                    catch (Exception e) {
-                    }
-                    
+                    dictionary.Add(node.Key, list);
                     return true;
                 }
                 else {
@@ -136,15 +131,16 @@ namespace CompressionPlugin
                 }
             }
             else {
-                List<bool> listLeft = list;
+                listLeft = new List<bool>(list);
                 listLeft.Add(false);
-                List<bool> listRight = list;
+                listRight = new List<bool>(list);
                 listRight.Add(true);
 
                 createDictionary(node.Left, listLeft);
                 createDictionary(node.Right, listRight);
+
+                return true;
             }
-            return false;
         }
 
         /*
