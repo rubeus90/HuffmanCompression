@@ -220,6 +220,7 @@ namespace ConsoleApplication {
             listPair.Add(new KeyValuePair<byte, int>(4, 5));
 
             Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
+            
             Debug.Assert(treeTop.Right.Right.Right.Key == 3, "Erreur dans la méthode createBinaryTree");
         }
 
