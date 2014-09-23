@@ -30,7 +30,7 @@ namespace ConsoleApplication {
             //checkTree();
             //checkDictionnary();
             //checkDecompress();
-            checkFunction();
+            //checkFunction();
 
             /*byte[] data = classe.GetBytes("abbccddd");
             List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
@@ -214,14 +214,14 @@ namespace ConsoleApplication {
 
             // Create and intiate an awesome List<KeyValuePair>
             List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(0, 5));
             listPair.Add(new KeyValuePair<byte, int>(1, 5));
             listPair.Add(new KeyValuePair<byte, int>(2, 5));
             listPair.Add(new KeyValuePair<byte, int>(3, 5));
             listPair.Add(new KeyValuePair<byte, int>(4, 5));
 
             Node treeTop = new CompressionPlugin.CompressionPlugin().createBinaryTree(listPair);
-            
-            //Debug.Assert(treeTop.Right.Right.Right.Key == 3, "Erreur dans la méthode createBinaryTree");
+            Debug.Assert(treeTop.Right.Right.Right.Key == 1 && treeTop.Right.Right.Left.Key == 2, "Erreur dans la méthode createBinaryTree");
         }
 
 
