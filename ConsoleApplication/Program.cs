@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CompressionPlugin;
+using System.IO;
 using System.Collections;
 using System.Diagnostics;
 
@@ -32,6 +33,10 @@ namespace ConsoleApplication {
 
             // test compress
             checkCompress("So let me feel, let me feel, Let me breathe you without a sound It's the only thing I'm waking up for, up for now"); // <-- C'est ici qu'on s'amuse !
+        
+            // Benchmark
+            benchmark(@"E:\Text.txt");
+        
         }
 
         /***************************************************************************************************************/
@@ -272,24 +277,49 @@ namespace ConsoleApplication {
             }
         }
 
-        /*static private void checkDecompress() {
-            bool[] bools = new bool[10];
-            bools[3] = true;
-            bools[5] = true;
-            bools[6] = true;
-            bools[7] = true;
-            bools[8] = true;
-            bools[9] = true;
-            BitArray bits = new BitArray(bools);
-            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-            byte[] data = classe.GetBytes("abbcccc");
-            List<KeyValuePair<byte, int>> frequencyTable = classe.frequency(data);
-            Node treeTop = classe.createBinaryTree(frequencyTable);
-            classe.createDictionary(treeTop, new List<bool>());
-            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
-            byte[] result = classe.decodeBitArray(bits, treeTop);
-        }*/
-
         /***************************************************************************************************************/
+
+        static private void benchmark(String filename) {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] data = File.ReadAllBytes(filename);
+
+            // Begin benchmark Compress
+            Stopwatch s1 = Stopwatch.StartNew();
+
+            List<KeyValuePair<byte, int>> frequency = classe.frequency(data);
+            Node treeTop = classe.createBinaryTree(frequency);
+            classe.createDictionary(treeTop, new List<bool>());
+            BitArray bits = classe.storeContentToBitArray(data);
+            byte[] compressedData = classe.BitArrayToByteArray(bits);
+
+            s1.Stop(); // end benchmark
+
+            classe.dictionary.Clear();
+
+            // Begin benchmark Decompress
+            Stopwatch s2 = Stopwatch.StartNew();
+
+            Node treeTop2 = classe.createBinaryTree(frequency);
+            classe.createDictionary(treeTop2, new List<bool>());
+            byte[] dataDecompressed = classe.decodeBitArray(new BitArray(compressedData), treeTop);
+
+            s2.Stop(); // End benchmark
+
+            // Test if succeed
+            for (int i = 0, j = 0; i < data.Count(); i += 2, j++) {
+                Debug.Assert(data[i] == dataDecompressed[j], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
+            }
+
+            Console.WriteLine("Compression :");
+            Console.Write("     Durée du test :");
+            Console.Write(s1.ElapsedMilliseconds);
+            Console.WriteLine(" ms");
+
+            Console.WriteLine("Décompression :");
+            Console.Write("     Durée du test :");
+            Console.Write(s2.ElapsedMilliseconds);
+            Console.WriteLine(" ms");
+
+        }
     }
 }
