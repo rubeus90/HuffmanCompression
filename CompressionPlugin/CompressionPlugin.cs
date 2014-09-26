@@ -46,13 +46,15 @@ namespace CompressionPlugin
          */
         static public List<KeyValuePair<byte,int>> frequency(byte[] data) {
             int[] frequenceTable = new int[256];
+            int i;
 
-            for (int i = 0; i < data.Length; i++) {
+            for (i = 0; i < data.Length; i++) {
                 frequenceTable[data[i]]++; 
             }
 
             List<KeyValuePair<byte, int>> list = new List<KeyValuePair<byte, int>>();
-            for (int i = 1; i < 256; i++) {
+
+            for (i = 1; i < 256; i++) {
                 if (frequenceTable[i] != 0) {
                     list.Add(new KeyValuePair<byte, int>((byte)i, frequenceTable[i]));
                 }
@@ -128,20 +130,23 @@ namespace CompressionPlugin
          */
         public byte[] storeContentToByteArray(byte[] data) {
             List<bool> encoded = new List<bool>();
-            for (int i = 0; i < data.Length; i += 2) {
+            int i;
+
+            for (i = 0; i < data.Length; i += 2) {
                 encoded.AddRange(dictionary[data[i]]);
             }
 
             BitArray bits = new BitArray(encoded.ToArray());
-            byte[] ret;
 
             if (bits.Length % 8 == 0) {
-                ret = new byte[bits.Length / 8];
+                i = bits.Length / 8;
             } else {
-                ret = new byte[bits.Length / 8 + 1];
+                i = bits.Length / 8 + 1;
             }
 
-            bits.CopyTo(ret, 0);
+            byte[] ret = new byte[i];
+
+            bits.CopyTo(ret, 0); // We have to do something about it !
             return ret;
         }
 
@@ -151,19 +156,25 @@ namespace CompressionPlugin
         static public byte[] decodeBitArray(BitArray encoded, Node treeTop) {
             List<byte> list = new List<byte>();
             Node node = treeTop;
+            Node left, right;
+            int length = encoded.Length;
 
-            for (int i = 0; i < encoded.Length; i++) {
+            for (int i = 0; i < length; i++) {
+                left = node.Left;
+                right = node.Right;
+
                 if (encoded[i]) {
-                    if (node.Right != null) {
-                        node = node.Right;
+                    if (right != null) {
+                        node = right;
                     }
                 }
                 else {
-                    if (node.Left != null) {
-                        node = node.Left;
+                    if (left != null) {
+                        node = left;
                     }
                 }
-                if (node.isLeaf()) {
+
+                if (node.Left == null && node.Right == null) {
                     list.Add(node.Key);
                     node = treeTop;
                 }
