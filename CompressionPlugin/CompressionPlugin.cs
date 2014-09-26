@@ -21,8 +21,7 @@ namespace CompressionPlugin
             data.frequency = frequency(inValue);
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
-            BitArray bits = storeContentToBitArray(inValue);
-            data.compressedData = BitArrayToByteArray(bits);
+            data.compressedData = storeContentToByteArray(inValue);
             return true;
         }
 
@@ -36,7 +35,7 @@ namespace CompressionPlugin
         /*
          * Convert String to byte[]
          */
-        public byte[] GetBytes(string str) {
+        static public byte[] GetBytes(string str) {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
@@ -45,9 +44,8 @@ namespace CompressionPlugin
         /*
          * Calculate to frequency of each character
          */
-        public List<KeyValuePair<byte,int>> frequency(byte[] data) {
+        static public List<KeyValuePair<byte,int>> frequency(byte[] data) {
             int[] frequenceTable = new int[256];
-            //Dictionary<byte,int> frequenceTable = new Dictionary<byte,int>();
 
             for (int i = 0; i < data.Length; i++) {
                 frequenceTable[data[i]]++; 
@@ -68,7 +66,7 @@ namespace CompressionPlugin
          * Left is the minimum
          * Right is the second minimum
          */
-        public void findMinimum(List<Node> list, ref Node left,ref Node right) {
+        static public void findMinimum(List<Node> list, ref Node left,ref Node right) {
             for (int i = 1; i < list.Count; i++){
                 if (list[i].Value <= right.Value){
                     if (list[i].Value <= left.Value){
@@ -84,7 +82,7 @@ namespace CompressionPlugin
         /*
          * Create the Huffman tree from the frequency table
          */
-        public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
+        static public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
             List<Node> listNode = new List<Node>();
 
             foreach (KeyValuePair<byte, int> pair in data) {
@@ -126,18 +124,17 @@ namespace CompressionPlugin
         }
 
         /*
-         * Store the original content into a BitArray 
+         * Store the original content into a ByteArray 
          */
-        public BitArray storeContentToBitArray(byte[] data) {
+        public byte[] storeContentToByteArray(byte[] data) {
             List<bool> encoded = new List<bool>();
-            for (int i = 0; i < data.Length; i=i+2) {
+            for (int i = 0; i < data.Length; i += 2) {
                 encoded.AddRange(dictionary[data[i]]);
             }
-            return new BitArray(encoded.ToArray());
-        }
 
-        public byte[] BitArrayToByteArray(BitArray bits) {
+            BitArray bits = new BitArray(encoded.ToArray());
             byte[] ret;
+
             if (bits.Length % 8 == 0) {
                 ret = new byte[bits.Length / 8];
             } else {
@@ -151,7 +148,7 @@ namespace CompressionPlugin
         /*
          * Decode the encoded BitArray to byte[]
          */
-        public byte[] decodeBitArray(BitArray encoded, Node treeTop) {
+        static public byte[] decodeBitArray(BitArray encoded, Node treeTop) {
             List<byte> list = new List<byte>();
             Node node = treeTop;
 
