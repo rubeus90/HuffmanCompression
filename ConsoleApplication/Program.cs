@@ -240,7 +240,7 @@ namespace ConsoleApplication {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             classe.createDictionary(treeTop, new List<bool>()); // Something wrong with this
 
-            Dictionary<byte, List<bool>> dictionary = classe.dictionary;
+            List<bool>[] dictionary = classe.dictionary;
             Debug.Assert(dictionary[1][0] && dictionary[1][1] && dictionary[1][2] , "Erreur dans la création du dico"); // Check for 0
             Debug.Assert(dictionary[0][0] && !dictionary[0][1], "Erreur dans la création du dico");
             Debug.Assert(dictionary[2][0] && dictionary[2][1] && !dictionary[2][2], "Erreur dans la création du dico");
@@ -263,7 +263,10 @@ namespace ConsoleApplication {
             int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
             
             /***/
-            classe.dictionary.Clear();
+            for (int i = 0; i < 256; i++) {
+                classe.dictionary[i]= null;
+            }
+                
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
@@ -290,7 +293,9 @@ namespace ConsoleApplication {
 
             s1.Stop(); // end benchmark
 
-            classe.dictionary.Clear();
+            for (int i = 0; i < 256; i++) {
+                classe.dictionary[i] = null;
+            }
 
             // Begin benchmark Decompress
             Stopwatch s2 = Stopwatch.StartNew();

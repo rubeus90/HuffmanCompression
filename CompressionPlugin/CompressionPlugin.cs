@@ -9,7 +9,7 @@ using System.Collections;
 namespace CompressionPlugin
 {
     public class CompressionPlugin : MarshalByRefObject, IPlugin{
-        public Dictionary<byte, List<bool>> dictionary = new Dictionary<byte, List<bool>>();
+        public List<bool>[] dictionary = new List<bool>[256];
 
         private String namePlugin = "CompressionPlugin";
         public String PluginName {
@@ -109,7 +109,7 @@ namespace CompressionPlugin
         public void createDictionary(Node node, List<bool> bools) {
             if (node.isLeaf()) {
                 //Console.WriteLine("Clé du noeud :" + node.Key);
-                dictionary.Add(node.Key, bools);
+                dictionary[node.Key] =  bools;
             } else {
                 //Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
                 //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
