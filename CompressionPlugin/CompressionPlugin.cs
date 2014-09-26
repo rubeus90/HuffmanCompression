@@ -22,13 +22,14 @@ namespace CompressionPlugin
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
             data.compressedData = storeContentToByteArray(inValue);
+            data.sizeOfUncompressedData = inValue.Count()/2;
             return true;
         }
 
         public bool Decompress(ref Huffman.HuffmanData data) {
-            /*Node treeTop = createBinaryTree(data.frequency);
+            Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
-            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop);*/
+            data.uncompressedData = decodeBitArray(new BitArray(data.sizeOfUncompressedData), treeTop);
             return true;
         }
 
@@ -176,6 +177,7 @@ namespace CompressionPlugin
 
                 if (node.Left == null && node.Right == null) {
                     list.Add(node.Key);
+                    list.Add(0);
                     node = treeTop;
                 }
             }

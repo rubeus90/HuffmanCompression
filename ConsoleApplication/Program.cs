@@ -36,6 +36,8 @@ namespace ConsoleApplication {
         
             // Benchmark
             benchmark(@"E:\Text.txt");
+
+            checkView("bonjour");
         
         }
 
@@ -258,9 +260,8 @@ namespace ConsoleApplication {
             List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop, new List<bool>());
-            //BitArray bits = classe.storeContentToBitArray(data);
             byte[] compressedData = classe.storeContentToByteArray(data);
-            int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
+            int sizeofCompressData = data.Count()/2; // Histoire des 0 au milieu ...
             
             /***/
             for (int i = 0; i < 256; i++) {
@@ -270,10 +271,14 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(data.Count()), treeTop);
 
-            for (int i = 0, j=0; i < data.Count(); i+=2, j++) {
-                Debug.Assert(data[i] == dataDecompressed[j], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
+            Console.Write("taille de l'entré :" + data.Count()/2);
+            Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
+            //Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
+            for (int i = 0; i < data.Count();i++) {
+                Console.WriteLine("i = " + i);
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
             }
         }
 
@@ -326,9 +331,37 @@ namespace ConsoleApplication {
             Console.WriteLine(" ms");
 
             Console.Write("     Pourcentage de compression :");
-            Console.Write(100 - (compressedData.Count() * 100) / data.Count());
+            Console.Write(1 - (compressedData.Count() * 1) / data.Count());
             Console.WriteLine(" %");
 
+        }
+
+
+        static private void checkView(String pString) {
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+
+            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes(pString);
+            List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
+            Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
+            classe.createDictionary(treeTop, new List<bool>());
+            byte[] compressedData = classe.storeContentToByteArray(data);
+            int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
+
+            /***/
+            for (int i = 0; i < 256; i++) {
+                classe.dictionary[i] = null;
+            }
+
+
+            Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
+            classe.createDictionary(treeTop2, new List<bool>());
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(data.Count()), treeTop);
+
+            Console.Write("taille de l'entré :" + data.Count());
+            Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
+            for (int i = 0; i < data.Count(); i++) {
+                Console.WriteLine(data[i] + " : " + dataDecompressed[i]);
+            }
         }
     }
 }
