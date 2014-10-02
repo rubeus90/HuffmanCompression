@@ -9,7 +9,7 @@ using System.Collections;
 namespace CompressionPlugin
 {
     public class CompressionPlugin : MarshalByRefObject, IPlugin{
-        public List<bool>[] dictionary = new List<bool>[256];
+        public List<byte>[] dictionary = new List<byte>[256];
 
         private String namePlugin = "CompressionPlugin";
         public String PluginName {
@@ -19,17 +19,20 @@ namespace CompressionPlugin
         public bool Compress(ref Huffman.HuffmanData data) {
             byte[] inValue = data.uncompressedData;
             data.frequency = frequency(inValue);
+
             Node treeTop = createBinaryTree(data.frequency);
-            createDictionary(treeTop, new List<bool>());
+            createDictionary(treeTop, new List<byte>());
+
             data.compressedData = storeContentToByteArray(inValue);
-            data.sizeOfUncompressedData = inValue.Count()/2;
+            data.sizeOfUncompressedData = inValue.Count();
+
             return true;
         }
 
         public bool Decompress(ref Huffman.HuffmanData data) {
             Node treeTop = createBinaryTree(data.frequency);
-            createDictionary(treeTop, new List<bool>());
-            data.uncompressedData = decodeBitArray(new BitArray(data.sizeOfUncompressedData), treeTop);
+            createDictionary(treeTop, new List<byte>());
+            data.uncompressedData = decodeBitArray(data.compressedData, treeTop);
             return true;
         }
 
@@ -100,20 +103,20 @@ namespace CompressionPlugin
         /*
          * Get through the Huffman tree to establish the binary code for each letter
          */
-        public void createDictionary(Node node, List<bool> bools) {
+        public void createDictionary(Node node, List<byte> bytes) {
             if (node.isLeaf()) {
                 //Console.WriteLine("Clé du noeud :" + node.Key);
-                dictionary[node.Key] =  bools;
+                dictionary[node.Key] =  bytes;
             } else {
                 //Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
                 //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
 
-                List<bool> bools_copy = new List<bool>(bools);
-                bools_copy.Add(true);
-                bools.Add(false);
+                List<byte> bytes_copy = new List<byte>(bytes);
+                bytes_copy.Add(1);
+                bytes.Add(0);
 
-                createDictionary(node.Right, bools_copy);
-                createDictionary(node.Left, bools);
+                createDictionary(node.Right, bytes_copy);
+                createDictionary(node.Left, bytes);
             }
         }
 
@@ -121,41 +124,33 @@ namespace CompressionPlugin
          * Store the original content into a ByteArray 
          */
         public byte[] storeContentToByteArray(byte[] data) {
-            List<bool> encoded = new List<bool>();
-            int i;
+            List<byte> encoded = new List<byte>();
+            int i, length = data.Length;
 
-            for (i = 0; i < data.Length; i++) {
+            for (i = 0; i < length; i++) {
                 encoded.AddRange(dictionary[data[i]]);
-            }
-
-            BitArray bits = new BitArray(encoded.ToArray());
-
-            if (bits.Length % 8 == 0) {
-                i = bits.Length / 8;
-            } else {
-                i = bits.Length / 8 + 1;
             }
 
             byte[] ret = new byte[i];
 
-            bits.CopyTo(ret, 0); // We have to do something about it !
-            return ret;
+            return encoded.ToArray();
         }
 
         /*
          * Decode the encoded BitArray to byte[]
          */
-        static public byte[] decodeBitArray(BitArray encoded, Node treeTop) {
+        static public byte[] decodeBitArray(byte[] encoded, Node treeTop) {
             List<byte> list = new List<byte>();
             Node node = treeTop;
             Node left, right;
-            int length = encoded.Length;
 
-            for (int i = 0; i < length; i++) {
+            int length = encoded.Length, i;
+
+            for (i = 0; i < length; i++) {
                 left = node.Left;
                 right = node.Right;
 
-                if (encoded[i]) {
+                if (encoded[i] == 1) {
                     if (right != null) {
                         node = right;
                     }
@@ -168,7 +163,6 @@ namespace CompressionPlugin
 
                 if (node.Left == null && node.Right == null) {
                     list.Add(node.Key);
-                    list.Add(0);
                     node = treeTop;
                 }
             }

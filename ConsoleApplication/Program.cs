@@ -31,11 +31,14 @@ namespace ConsoleApplication {
             // test Dictionnary
             checkDictionnary();
 
+            // test storeContentToByteArray
+            checkstoreContentToByteArray();
+
             // test compress
             checkCompress(@"E:\Testfrequency.txt"); // <-- C'est ici qu'on s'amuse !
         
             // Benchmark
-            //benchmark(@"E:\Text.txt");
+            benchmark(@"E:\Text.txt");
 
             //checkView("bonjour");
         
@@ -250,14 +253,42 @@ namespace ConsoleApplication {
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(listPair);
 
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-            classe.createDictionary(treeTop, new List<bool>()); // Something wrong with this
+            classe.createDictionary(treeTop, new List<byte>()); // Something wrong with this
 
-            List<bool>[] dictionary = classe.dictionary;
-            Debug.Assert(dictionary[1][0] && dictionary[1][1] && dictionary[1][2] , "Erreur dans la création du dico"); // Check for 0
-            Debug.Assert(dictionary[0][0] && !dictionary[0][1], "Erreur dans la création du dico");
-            Debug.Assert(dictionary[2][0] && dictionary[2][1] && !dictionary[2][2], "Erreur dans la création du dico");
-            Debug.Assert(!dictionary[4][0] && !dictionary[4][1], "Erreur dans la création du dico");
-            Debug.Assert(!dictionary[3][0] && dictionary[3][1], "Erreur dans la création du dico");
+            List<byte>[] dictionary = classe.dictionary;
+
+            Debug.Assert(dictionary[0][0] == 1 && dictionary[0][1] == 0, "Erreur dans la création du dico");
+            Debug.Assert(dictionary[1][0] == 1 && dictionary[1][1] == 1 && dictionary[1][2] == 1, "Erreur dans la création du dico"); // Check for 0         
+            Debug.Assert(dictionary[2][0] == 1 && dictionary[2][1] == 1 && dictionary[2][2] == 0, "Erreur dans la création du dico");
+            Debug.Assert(dictionary[3][0] == 0 && dictionary[3][1] == 1, "Erreur dans la création du dico");
+            Debug.Assert(dictionary[4][0] == 0 && dictionary[4][1] == 0, "Erreur dans la création du dico");
+            
+        }
+
+
+        /***************************************************************************************************************/
+
+        static private void checkstoreContentToByteArray(){
+            byte[] a = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3,4,4,4,4,4 };
+
+            // Create and intiate an awesome List<KeyValuePair>
+            List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(0, 5));
+            listPair.Add(new KeyValuePair<byte, int>(1, 5));
+            listPair.Add(new KeyValuePair<byte, int>(2, 5));
+            listPair.Add(new KeyValuePair<byte, int>(3, 5));
+            listPair.Add(new KeyValuePair<byte, int>(4, 5));
+
+            Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(listPair);
+
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            classe.createDictionary(treeTop, new List<byte>()); // Something wrong with this
+
+            List<byte>[] dictionary = classe.dictionary;
+
+            byte[] res = classe.storeContentToByteArray(a);
+
+            Debug.Assert(res.Count() == 60, "Erreur dans sotreContentToByteArray");
         }
 
 
@@ -269,26 +300,26 @@ namespace ConsoleApplication {
 
             List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop, new List<bool>());
+            classe.createDictionary(treeTop, new List<byte>());
             byte[] compressedData = classe.storeContentToByteArray(data);
             int sizeofCompressData = data.Count();
             
-            /***/
+            // On efface le dictionary
             for (int i = 0; i < 256; i++) {
                 classe.dictionary[i]= null;
             }
                 
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(data.Count()), treeTop);
+            classe.createDictionary(treeTop2, new List<byte>());
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(compressedData, treeTop2);
 
-            Console.Write("taille de l'entré :" + data.Count());
-            Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
-            //Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
+            //Console.Write("taille de l'entré :" + data.Count());
+            //Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
+
+            Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count();i++) {
-                Console.WriteLine("i = " + i);
-                //Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
             }
 
             File.WriteAllBytes(@"E:\TestfrequencyResult.txt", dataDecompressed);
@@ -305,7 +336,7 @@ namespace ConsoleApplication {
 
             List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop, new List<bool>());
+            classe.createDictionary(treeTop, new List<byte>());
             byte[] compressedData = classe.storeContentToByteArray(data);
 
             s1.Stop(); // end benchmark
@@ -318,14 +349,14 @@ namespace ConsoleApplication {
             Stopwatch s2 = Stopwatch.StartNew();
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop);
+            classe.createDictionary(treeTop2, new List<byte>());
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(compressedData, treeTop2);
 
             s2.Stop(); // End benchmark
 
             // Test if succeed
-            for (int i = 0, j = 0; i < data.Count(); i += 2, j++) {
-                Debug.Assert(data[i] == dataDecompressed[j], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
+            for (int i = 0; i < data.Count();i++) {
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
             }
 
             Console.WriteLine("Compression :");
@@ -343,13 +374,13 @@ namespace ConsoleApplication {
             Console.WriteLine(" ms");
 
             Console.Write("     Pourcentage de compression :");
-            Console.Write(1 - (compressedData.Count() * 1) / data.Count());
-            Console.WriteLine(" %");
+            Console.WriteLine(data.Count() + " : " + compressedData.Count());
+            Console.WriteLine(1 - compressedData.Count() / data.Count() + " %");
 
         }
 
 
-        static private void checkView(String pString) {
+        /*static private void checkView(String pString) {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
 
             byte[] data = GetBytes(pString);
@@ -373,6 +404,6 @@ namespace ConsoleApplication {
             for (int i = 0; i < data.Count(); i++) {
                 Console.WriteLine(data[i] + " : " + dataDecompressed[i]);
             }
-        }
+        }*/
     }
 }
