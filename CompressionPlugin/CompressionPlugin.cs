@@ -34,28 +34,19 @@ namespace CompressionPlugin
         }
 
         /*
-         * Convert String to byte[]
-         */
-        static public byte[] GetBytes(string str) {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-
-        /*
          * Calculate to frequency of each character
          */
         static public List<KeyValuePair<byte,int>> frequency(byte[] data) {
             int[] frequenceTable = new int[256];
-            int i;
+            int i, length = data.Length;
 
-            for (i = 0; i < data.Length; i++) {
+            for (i = 0; i < length; i++) {
                 frequenceTable[data[i]]++; 
             }
 
             List<KeyValuePair<byte, int>> list = new List<KeyValuePair<byte, int>>();
 
-            for (i = 1; i < 256; i++) {
+            for (i = 0; i < 256; i++) {
                 if (frequenceTable[i] != 0) {
                     list.Add(new KeyValuePair<byte, int>((byte)i, frequenceTable[i]));
                 }
@@ -117,7 +108,7 @@ namespace CompressionPlugin
                 //Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
                 //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
 
-                List<bool> bools_copy = new List<bool>(bools); // J'aimerais bien faire ça pour mon futur, on sait jamais, un accident c'est vite venu
+                List<bool> bools_copy = new List<bool>(bools);
                 bools_copy.Add(true);
                 bools.Add(false);
 
@@ -133,7 +124,7 @@ namespace CompressionPlugin
             List<bool> encoded = new List<bool>();
             int i;
 
-            for (i = 0; i < data.Length; i += 2) {
+            for (i = 0; i < data.Length; i++) {
                 encoded.AddRange(dictionary[data[i]]);
             }
 

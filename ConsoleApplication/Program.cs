@@ -16,7 +16,7 @@ namespace ConsoleApplication {
             // Test Frequency
             checkFrequency1();
             checkFrequency2();
-            checkFrequency3();
+            checkFrequency3(@"E:\Testfrequency.txt");
 
             // Test Minimum
             checkMinimum1();
@@ -32,19 +32,30 @@ namespace ConsoleApplication {
             checkDictionnary();
 
             // test compress
-            checkCompress("So let me feel, let me feel, Let me breathe you without a sound It's the only thing I'm waking up for, up for now"); // <-- C'est ici qu'on s'amuse !
+            checkCompress(@"E:\Testfrequency.txt"); // <-- C'est ici qu'on s'amuse !
         
             // Benchmark
-            benchmark(@"E:\Text.txt");
+            //benchmark(@"E:\Text.txt");
 
-            checkView("bonjour");
+            //checkView("bonjour");
         
         }
 
         /***************************************************************************************************************/
 
+        /*
+         * Convert String to byte[]
+         */
+        static public byte[] GetBytes(string str) {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        /***************************************************************************************************************/
+
         static private void checkFrequency1() {
-            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
+            byte[] data = GetBytes("abbcccdddd"); // One a, two b, three c and 4 d, so How many e ? Yes 0 ! 
             List<KeyValuePair<byte, int>> frequencyTable = CompressionPlugin.CompressionPlugin.frequency(data); // Counts and sorts data
 
             KeyValuePair<byte, int> pair = frequencyTable.Find(x => x.Key == 97); //Check a frequency
@@ -61,7 +72,7 @@ namespace ConsoleApplication {
         }
 
         static private void checkFrequency2() {
-            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes("hey thibault!");
+            byte[] data = GetBytes("hey thibault!");
             List<KeyValuePair<byte, int>> frequencyTable = CompressionPlugin.CompressionPlugin.frequency(data);
 
             KeyValuePair<byte, int> pair = frequencyTable.Find(x => x.Key == 104); //Check h frequency
@@ -95,18 +106,17 @@ namespace ConsoleApplication {
             Debug.Assert(pair.Value == 1, "Echec de la méthode frequency :l");
         }
 
-        static private void checkFrequency3() {
-            String yourString = "Si toi aussi tu t'amuse à faire du C# le mardi après-midi, tape dans tes mains !";
-            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes(yourString);
-            int lengh = yourString.Count();
+        static private void checkFrequency3(String filename) {
+            byte[] data = File.ReadAllBytes(filename);
+            int lengh = data.Count();
             int totalFrequency = 0;
             List<KeyValuePair<byte, int>> frequencyTable = CompressionPlugin.CompressionPlugin.frequency(data);
             foreach (KeyValuePair<byte, int> pair in frequencyTable) {
-                // Console.WriteLine("Key :"+pair.Key + "Pair :" + pair.Value);
+                //Console.WriteLine("Key :"+pair.Key + "Pair :" + pair.Value);
                 totalFrequency += pair.Value;
             }
-            // Console.WriteLine(totalFrequency);
-            // Console.WriteLine(lengh);
+            //Console.WriteLine(totalFrequency);
+            //Console.WriteLine(lengh);
             Debug.Assert(lengh == totalFrequency, "Echec de la methode frequency");
         }
 
@@ -128,7 +138,7 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             CompressionPlugin.CompressionPlugin.findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum");
+            Debug.Assert(left.Value == 2 && right.Value == 2, "Echec méthode findMinimum - checkMinimum1");
         }
 
         static private void checkMinimum2() {
@@ -146,7 +156,7 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             CompressionPlugin.CompressionPlugin.findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 1 && right.Value == 2, "Echec méthode findMinimum");
+            Debug.Assert(left.Value == 1 && right.Value == 2, "Echec méthode findMinimum - checkMinimum2");
         }
 
         static private void checkMinimum3() {
@@ -164,7 +174,7 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             CompressionPlugin.CompressionPlugin.findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum");
+            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum  - checkMinimum3");
         }
 
         static private void checkMinimum4() {
@@ -182,7 +192,7 @@ namespace ConsoleApplication {
             Node right = listNode[1];
             CompressionPlugin.CompressionPlugin.findMinimum(listNode, ref left, ref right);
 
-            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum");
+            Debug.Assert(left.Value == 1 && right.Value == 1, "Echec méthode findMinimum  - checkMinimum4");
         }
 
         /***************************************************************************************************************/
@@ -207,7 +217,7 @@ namespace ConsoleApplication {
                 valueTotal += listPair[i].Value;
             }
 
-            Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree");
+            Debug.Assert(valueTotal == treeTop.Value, "Erreur dans la méthode createBinaryTree - checkTree1");
         }
 
         static private void checkTree2() {
@@ -253,15 +263,15 @@ namespace ConsoleApplication {
 
         /***************************************************************************************************************/
 
-        static private void checkCompress(String pString) {
+        static private void checkCompress(String filename) {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            byte[] data = File.ReadAllBytes(filename);
 
-            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes(pString);
             List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop, new List<bool>());
             byte[] compressedData = classe.storeContentToByteArray(data);
-            int sizeofCompressData = data.Count()/2; // Histoire des 0 au milieu ...
+            int sizeofCompressData = data.Count();
             
             /***/
             for (int i = 0; i < 256; i++) {
@@ -273,13 +283,15 @@ namespace ConsoleApplication {
             classe.createDictionary(treeTop2, new List<bool>());
             byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(data.Count()), treeTop);
 
-            Console.Write("taille de l'entré :" + data.Count()/2);
+            Console.Write("taille de l'entré :" + data.Count());
             Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
             //Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count();i++) {
                 Console.WriteLine("i = " + i);
-                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance !");
+                //Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
             }
+
+            File.WriteAllBytes(@"E:\TestfrequencyResult.txt", dataDecompressed);
         }
 
         /***************************************************************************************************************/
@@ -340,14 +352,13 @@ namespace ConsoleApplication {
         static private void checkView(String pString) {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
 
-            byte[] data = CompressionPlugin.CompressionPlugin.GetBytes(pString);
+            byte[] data = GetBytes(pString);
             List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop, new List<bool>());
             byte[] compressedData = classe.storeContentToByteArray(data);
             int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
 
-            /***/
             for (int i = 0; i < 256; i++) {
                 classe.dictionary[i] = null;
             }
