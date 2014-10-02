@@ -32,7 +32,7 @@ namespace CompressionPlugin
         public bool Decompress(ref Huffman.HuffmanData data) {
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
-            data.uncompressedData = decodeBitArray(data.compressedData, treeTop, data.sizeOfUncompressedData);
+            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop, ref data.sizeOfUncompressedData);
             return true;
         }
 
@@ -64,7 +64,9 @@ namespace CompressionPlugin
          * Right is the second minimum
          */
         static public void findMinimum(List<Node> list, ref Node left,ref Node right) {
-            for (int i = 1; i < list.Count; i++){
+            int i, length = list.Count;
+
+            for (i = 1; i < length; i++){
                 if (list[i].Value <= right.Value){
                     if (list[i].Value <= left.Value){
                         right = left;
@@ -104,13 +106,10 @@ namespace CompressionPlugin
          * Get through the Huffman tree to establish the binary code for each letter
          */
         public void createDictionary(Node node, List<bool> bools) {
-            if (node.isLeaf()) {
-                //Console.WriteLine("Clé du noeud :" + node.Key);
+            if (node.isLeaf())
                 dictionary[node.Key] =  bools;
-            } else {
-                //Console.WriteLine("Node de gauche :" + node.Left.Key + " " + node.Left.Value);
-                //Console.WriteLine("Node de droite :" + node.Right.Key + " " + node.Right.Value);
 
+            else {
                 List<bool> bools_copy = new List<bool>(bools);
                 bools_copy.Add(true);
                 bools.Add(false);
@@ -125,18 +124,19 @@ namespace CompressionPlugin
          */
         public byte[] storeContentToByteArray(byte[] data) {
             List<bool> encoded = new List<bool>();
-            int i;
-            for (i = 0; i < data.Length; i++) {
-                encoded.AddRange(dictionary[data[i]]);
+            int i,j, length = data.Length, count;
+
+            for (i = 0; i < length; i++) {
+                count = dictionary[data[i]].Count;
+                for (j = 0; j < count; j++)
+                    encoded.Add(dictionary[data[i]][j]);
             }
 
             BitArray bits = new BitArray(encoded.ToArray());
+            length = bits.Length;
 
-            if (bits.Length % 8 == 0) {
-                i = bits.Length / 8;
-            } else {
-                i = bits.Length / 8 + 1;
-            }
+            i = (length % 8 == 0) ? length / 8 : length / 8 + 1;
+
             byte[] ret = new byte[i];
             bits.CopyTo(ret, 0); // We have to do something about it !
             return ret;
@@ -145,29 +145,20 @@ namespace CompressionPlugin
         /*
          * Decode the encoded BitArray to byte[]
          */
-        static public byte[] decodeBitArray(byte[] encoded, Node treeTop, int length) {
+        static public byte[] decodeBitArray(BitArray bits, Node treeTop, ref int length) {
             List<byte> list = new List<byte>();
-            BitArray bits = new BitArray(encoded);
             byte[] res = new byte[length];
+
             Node node = treeTop;
             Node left, right;
 
-            int i;
+            int i, count = bits.Length;
 
-            for (i = 0; i < bits.Length; i++) {
+            for (i = 0; i < count; i++) {
                 left = node.Left;
                 right = node.Right;
 
-                if (bits[i]) {
-                    if (right != null) {
-                        node = right;
-                    }
-                }
-                else {
-                    if (left != null) {
-                        node = left;
-                    }
-                }
+                node = bits[i] ? right : left;
 
                 if (node.Left == null && node.Right == null) {
                     list.Add(node.Key);
@@ -175,12 +166,10 @@ namespace CompressionPlugin
                 }
             }
 
-           // Console.WriteLine("");
-          //  Console.WriteLine("Taille de List : " + list.Count());
 
-            for (i = 0; i < length ;i++){    
+            for (i = 0; i < length ;i++)   
                 res[i] = list[i]; 
-            }
+
             return res;
         }
     }

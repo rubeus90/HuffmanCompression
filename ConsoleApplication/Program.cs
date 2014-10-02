@@ -313,7 +313,7 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(compressedData, treeTop2, sizeofUnCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofUnCompressData);
 
             //Console.WriteLine("taille de l'entré :" + sizeofUnCompressData + "taile Decompressed : " + dataDecompressed.Count());
 
@@ -344,7 +344,7 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(compressedData, treeTop2, sizeofUnCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofUnCompressData);
 
             //Console.WriteLine("taille de l'entré :" + data.Count() + "taile compressed : " + compressedData.Count());
             //Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
@@ -384,14 +384,9 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(compressedData, treeTop2, sizeofCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofCompressData);
 
             s2.Stop(); // End benchmark
-
-            // Test if succeed
-            for (int i = 0; i < data.Count();i++) {
-                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
-            }
 
             Console.WriteLine("Compression :");
             Console.Write("     Durée du test :");
@@ -409,7 +404,6 @@ namespace ConsoleApplication {
 
             Console.Write("     Pourcentage de compression :");
             Console.WriteLine(data.Count() + " : " + compressedData.Count());
-            Console.WriteLine(1 - compressedData.Count() / data.Count() + " %");
 
         }
 
