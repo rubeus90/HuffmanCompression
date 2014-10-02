@@ -313,7 +313,7 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofUnCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData),ref treeTop2, ref sizeofUnCompressData);
 
             //Console.WriteLine("taille de l'entré :" + sizeofUnCompressData + "taile Decompressed : " + dataDecompressed.Count());
 
@@ -344,7 +344,7 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofUnCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData),ref treeTop2, ref sizeofUnCompressData);
 
             //Console.WriteLine("taille de l'entré :" + data.Count() + "taile compressed : " + compressedData.Count());
             //Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
@@ -384,7 +384,7 @@ namespace ConsoleApplication {
 
             Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
             classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData), treeTop2, ref sizeofCompressData);
+            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(compressedData),ref treeTop2, ref sizeofCompressData);
 
             s2.Stop(); // End benchmark
 
@@ -406,32 +406,5 @@ namespace ConsoleApplication {
             Console.WriteLine(data.Count() + " : " + compressedData.Count());
 
         }
-
-
-        /*static private void checkView(String pString) {
-            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
-
-            byte[] data = GetBytes(pString);
-            List<KeyValuePair<byte, int>> frequency = CompressionPlugin.CompressionPlugin.frequency(data);
-            Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop, new List<bool>());
-            byte[] compressedData = classe.storeContentToByteArray(data);
-            int sizeofCompressData = data.Count() / 2; // Histoire des 0 au milieu ...
-
-            for (int i = 0; i < 256; i++) {
-                classe.dictionary[i] = null;
-            }
-
-
-            Node treeTop2 = CompressionPlugin.CompressionPlugin.createBinaryTree(frequency);
-            classe.createDictionary(treeTop2, new List<bool>());
-            byte[] dataDecompressed = CompressionPlugin.CompressionPlugin.decodeBitArray(new BitArray(data.Count()), treeTop);
-
-            Console.Write("taille de l'entré :" + data.Count());
-            Console.WriteLine("Taille de la sortie :" + dataDecompressed.Count());
-            for (int i = 0; i < data.Count(); i++) {
-                Console.WriteLine(data[i] + " : " + dataDecompressed[i]);
-            }
-        }*/
     }
 }

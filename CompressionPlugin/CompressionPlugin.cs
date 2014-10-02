@@ -32,7 +32,7 @@ namespace CompressionPlugin
         public bool Decompress(ref Huffman.HuffmanData data) {
             Node treeTop = createBinaryTree(data.frequency);
             createDictionary(treeTop, new List<bool>());
-            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData), treeTop, ref data.sizeOfUncompressedData);
+            data.uncompressedData = decodeBitArray(new BitArray(data.compressedData),ref treeTop, ref data.sizeOfUncompressedData);
             return true;
         }
 
@@ -50,9 +50,8 @@ namespace CompressionPlugin
             List<KeyValuePair<byte, int>> list = new List<KeyValuePair<byte, int>>();
 
             for (i = 0; i < 256; i++) {
-                if (frequenceTable[i] != 0) {
+                if (frequenceTable[i] != 0)
                     list.Add(new KeyValuePair<byte, int>((byte)i, frequenceTable[i]));
-                }
             }
 
             return list;
@@ -83,22 +82,24 @@ namespace CompressionPlugin
          */
         static public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
             List<Node> listNode = new List<Node>();
+            int i, length = data.Count();
 
-            foreach (KeyValuePair<byte, int> pair in data) {
-                listNode.Add(new Node { Key = pair.Key, Value = pair.Value });
+            for (i = 0; i < length; i++) {
+                listNode.Add(new Node { Key = data[i].Key, Value = data[i].Value });
             }
 
-            while(listNode.Count > 1) {
+            while (listNode.Count > 1) {
                 Node left = listNode[0];
-                Node right = listNode[1];            
-                findMinimum(listNode,ref left, ref right);  
-    
-                Node parent = new Node {Value = left.Value + right.Value, Left = left, Right = right, isParent = 1 };
+                Node right = listNode[1];
+                findMinimum(listNode, ref left, ref right);
+
+                Node parent = new Node { Value = left.Value + right.Value, Left = left, Right = right, isParent = 1 };
 
                 listNode.Add(parent);
                 listNode.Remove(left);
                 listNode.Remove(right);
-            } 
+            }
+
             return listNode[0];
         }
 
@@ -106,7 +107,7 @@ namespace CompressionPlugin
          * Get through the Huffman tree to establish the binary code for each letter
          */
         public void createDictionary(Node node, List<bool> bools) {
-            if (node.isLeaf())
+            if (node.isParent != 1)
                 dictionary[node.Key] =  bools;
 
             else {
@@ -134,21 +135,20 @@ namespace CompressionPlugin
                     encoded.Add(bools[j]);
             }
 
-            BitArray bits = new BitArray(encoded.ToArray());
+            BitArray bits = new BitArray(encoded.ToArray()); // It's hard to get better than that ...
             length = bits.Length;
 
             i = (length % 8 == 0) ? length / 8 : length / 8 + 1;
 
             byte[] ret = new byte[i];
-            bits.CopyTo(ret, 0); // We have to do something about it !
+            bits.CopyTo(ret, 0);
             return ret;
         }
 
         /*
          * Decode the encoded BitArray to byte[]
          */
-        static public byte[] decodeBitArray(BitArray bits, Node treeTop, ref int length) {
-            List<byte> list = new List<byte>();
+        static public byte[] decodeBitArray(BitArray bits,ref Node treeTop, ref int length) {
             byte[] res = new byte[length];
             int j=0,i;
             Node node = treeTop;
