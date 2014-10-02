@@ -93,7 +93,7 @@ namespace CompressionPlugin
                 Node right = listNode[1];            
                 findMinimum(listNode,ref left, ref right);  
     
-                Node parent = new Node {Value = left.Value + right.Value, Left = left, Right = right };
+                Node parent = new Node {Value = left.Value + right.Value, Left = left, Right = right, isParent = 1 };
 
                 listNode.Add(parent);
                 listNode.Remove(left);
@@ -124,12 +124,14 @@ namespace CompressionPlugin
          */
         public byte[] storeContentToByteArray(byte[] data) {
             List<bool> encoded = new List<bool>();
-            int i,j, length = data.Length, count;
+            int i, j, length = data.Length, count;
+            List<bool> bools;
 
             for (i = 0; i < length; i++) {
-                count = dictionary[data[i]].Count;
+                bools = dictionary[data[i]];
+                count = bools.Count;
                 for (j = 0; j < count; j++)
-                    encoded.Add(dictionary[data[i]][j]);
+                    encoded.Add(bools[j]);
             }
 
             BitArray bits = new BitArray(encoded.ToArray());
@@ -148,27 +150,19 @@ namespace CompressionPlugin
         static public byte[] decodeBitArray(BitArray bits, Node treeTop, ref int length) {
             List<byte> list = new List<byte>();
             byte[] res = new byte[length];
-
+            int j=0,i;
             Node node = treeTop;
-            Node left, right;
 
-            int i, count = bits.Length;
+            for (i = 0; j < length; i++) {
 
-            for (i = 0; i < count; i++) {
-                left = node.Left;
-                right = node.Right;
+                node = bits[i] ? node.Right : node.Left;
 
-                node = bits[i] ? right : left;
-
-                if (node.Left == null && node.Right == null) {
-                    list.Add(node.Key);
+                if (node.isParent != 1) {
+                    res[j] = node.Key;
                     node = treeTop;
+                    j++;
                 }
             }
-
-
-            for (i = 0; i < length ;i++)   
-                res[i] = list[i]; 
 
             return res;
         }
