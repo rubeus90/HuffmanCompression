@@ -83,19 +83,24 @@ namespace CompressionPlugin
         static public Node createBinaryTree(List<KeyValuePair<byte, int>> data) {
             List<Node> listNode = new List<Node>();
             int i, length = data.Count();
+            Node left, right;
 
             for (i = 0; i < length; i++) {
                 listNode.Add(new Node { Key = data[i].Key, Value = data[i].Value });
             }
 
+            if (length == 1) {
+                right = listNode[0];
+                listNode.Add(new Node { Value = right.Value, Right = right, Left =  new Node(), isParent = 1 });
+                listNode.Remove(right);
+            }
+
             while (listNode.Count > 1) {
-                Node left = listNode[0];
-                Node right = listNode[1];
+                left = listNode[0];
+                right = listNode[1];
                 findMinimum(listNode, ref left, ref right);
 
-                Node parent = new Node { Value = left.Value + right.Value, Left = left, Right = right, isParent = 1 };
-
-                listNode.Add(parent);
+                listNode.Add(new Node { Value = left.Value + right.Value, Left = left, Right = right, isParent = 1 });
                 listNode.Remove(left);
                 listNode.Remove(right);
             }
