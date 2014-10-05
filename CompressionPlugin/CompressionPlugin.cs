@@ -140,7 +140,7 @@ namespace CompressionPlugin
                     encoded.Add(bools[j]);
             }
 
-            BitArray bits = new BitArray(encoded.ToArray()); // It's hard to get better than that ...
+            BitArray bits = new BitArray(encoded.ToArray());
             length = bits.Length;
 
             i = (length % 8 == 0) ? length / 8 : length / 8 + 1;

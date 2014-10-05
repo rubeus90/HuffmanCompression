@@ -38,7 +38,7 @@ namespace ConsoleApplication {
             // test compress
             checkDecompress1();
             checkDecompress2();
-            checkCompress(@"E:\aaa.txt"); // <-- C'est ici qu'on s'amuse !
+            checkCompress(@"E:\xbmc-13.2-Gotham.exe"); // <-- C'est ici qu'on s'amuse !
         
             // Benchmark
             benchmark(@"E:\Text.txt");
@@ -325,7 +325,7 @@ namespace ConsoleApplication {
 
             Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count(); i++) {
-                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme - checkCompress");
             }      
         }
 
@@ -352,7 +352,7 @@ namespace ConsoleApplication {
 
             Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count(); i++) {
-                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme! - checkCompress");
             }
         }
 
@@ -380,7 +380,7 @@ namespace ConsoleApplication {
 
             Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count();i++) {
-                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme, courage et écoute de la House/Big Room/Trance ! - checkCompress");
+                Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme - checkCompress");
             }
 
             File.WriteAllBytes(@"E:\TestfrequencyResult.txt", dataDecompressed);
