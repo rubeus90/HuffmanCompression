@@ -13,7 +13,7 @@ namespace ConsoleApplication {
         static void Main(string[] args) {
             CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
             
-            /*// Test Frequency
+            // Test Frequency
             checkFrequency1();
             checkFrequency2();
             checkFrequency3(@"E:\Text.txt");
@@ -39,11 +39,11 @@ namespace ConsoleApplication {
             // test compress
             checkDecompress1();
             checkDecompress2();
-            checkCompress(@"E:\Text.txt"); // <-- C'est ici qu'on s'amuse !*/
+            checkCompress(@"E:\Text.txt");
         
             // Benchmark
-            //benchmark(@"E:\Text.txt");
-            benchmark(@"E:\amd-catalyst-14-9-win7-win8.1-64bit-dd-ccc-whql.exe");
+            benchmark(@"E:\Text.txt");
+            //benchmark(@"E:\amd-catalyst-14-9-win7-win8.1-64bit-dd-ccc-whql.exe");
         
         }
 
@@ -354,7 +354,6 @@ namespace ConsoleApplication {
 
             Debug.Assert(data.Count() == dataDecompressed.Count(), "La taille de l'entrée ne correspond pas à celle de la sortie");
             for (int i = 0; i < data.Count(); i++) {
-                Console.Write(data[i] + " : " + dataDecompressed[i]);
                 Debug.Assert(data[i] == dataDecompressed[i], "Erreur dans la tout le programme - checkCompress");
             }      
         }

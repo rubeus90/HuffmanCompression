@@ -148,21 +148,6 @@ namespace CompressionPlugin
             byte[] res = new byte[i];
             bits.CopyTo(res, 0);
 
-            // Alternative to CopyTo but slower
-            /*int byteIndex = 0;
-            j = 0;
-
-            for (i = 0; i < length; i++) {
-                if (bits[i])
-                    res[byteIndex] |= (byte)(1 << ( 0 + j));
-
-                j++;
-                if (j == 8) {
-                    j = 0;
-                    byteIndex++;
-                }
-            }*/
-
             return res;
         }
 
