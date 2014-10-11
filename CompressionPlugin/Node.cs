@@ -12,8 +12,6 @@ namespace CompressionPlugin {
         public byte Key { get; set; }
         public int Value { get; set; }
 
-        public bool isLeaf() {
-            return (Right == null && Left == null);
-        }
+        public byte isParent { get; set; }
     }
 }

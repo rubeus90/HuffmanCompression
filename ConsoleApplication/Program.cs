@@ -30,7 +30,8 @@ namespace ConsoleApplication {
             checkTree3();
 
             // test Dictionnary
-            checkDictionnary();
+            checkDictionary1();
+            checkDictionary2();
 
             // test storeContentToByteArray
             checkstoreContentToByteArray();
@@ -38,7 +39,7 @@ namespace ConsoleApplication {
             // test compress
             checkDecompress1();
             checkDecompress2();
-            checkCompress(@"E:\xbmc-13.2-Gotham.exe"); // <-- C'est ici qu'on s'amuse !
+            checkCompress(@"E:\Text.txt"); // <-- C'est ici qu'on s'amuse !
         
             // Benchmark
             benchmark(@"E:\Text.txt");
@@ -239,17 +240,17 @@ namespace ConsoleApplication {
 
             // Create and intiate an awesome List<KeyValuePair>
             List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
-            listPair.Add(new KeyValuePair<byte, int>(0, 25));
+            listPair.Add(new KeyValuePair<byte, int>(0, 1));
 
             Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(listPair);
-            Debug.Assert(treeTop.Value == 25 && treeTop.Right.Value == 25 && treeTop.Right.Key == 0, "Erreur dans la méthode createBinaryTree");
+            Debug.Assert(treeTop.Value == 1 && treeTop.Right.Value == 1 && treeTop.Right.Key == 0, "Erreur dans la méthode createBinaryTree");
 
         }
 
 
         /***************************************************************************************************************/
 
-        static private void checkDictionnary() {
+        static private void checkDictionary1() {
 
             // Create and intiate an awesome List<KeyValuePair>
             List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
@@ -271,6 +272,33 @@ namespace ConsoleApplication {
             Debug.Assert(dictionary[2][0]  && dictionary[2][1] && !dictionary[2][2], "Erreur dans la création du dico");
             Debug.Assert(!dictionary[3][0] && dictionary[3][1], "Erreur dans la création du dico");
             Debug.Assert(!dictionary[4][0] && !dictionary[4][1] , "Erreur dans la création du dico");
+            
+        }
+
+        static private void checkDictionary2() {
+
+            // Create and intiate an awesome List<KeyValuePair>
+            List<KeyValuePair<byte, int>> listPair = new List<KeyValuePair<byte, int>>();
+            listPair.Add(new KeyValuePair<byte, int>(0, 5));
+            listPair.Add(new KeyValuePair<byte, int>(1, 5));
+            listPair.Add(new KeyValuePair<byte, int>(2, 5));
+            listPair.Add(new KeyValuePair<byte, int>(3, 5));
+            listPair.Add(new KeyValuePair<byte, int>(4, 5));
+
+            Node treeTop = CompressionPlugin.CompressionPlugin.createBinaryTree(listPair);
+
+            CompressionPlugin.CompressionPlugin classe = new CompressionPlugin.CompressionPlugin();
+            classe.createDictionary(treeTop, new List<bool>()); // Something wrong with this
+
+            List<bool>[] dictionary = classe.dictionary;
+
+            int k = 0;
+
+            for (int i = 0; i < 256; i++) {
+                if (dictionary[i] != null) k++;             
+            }
+
+            Debug.Assert(k == listPair.Count(), "Erreur dans la création du dico");
             
         }
 
@@ -432,8 +460,7 @@ namespace ConsoleApplication {
             Console.WriteLine(" ms");
 
             Console.Write("     Pourcentage de compression :");
-            Console.WriteLine(data.Count() + " : " + compressedData.Count());
-
+            Console.WriteLine(1 - (float)compressedData.Count() / (float)data.Count());
         }
     }
 }
